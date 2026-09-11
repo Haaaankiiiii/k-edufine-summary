@@ -243,7 +243,7 @@ def validate_rows(rows: list[dict]) -> Validation:
             if qty is None or price is None:
                 result.notes.append(f"{label}: 수량 또는 단가가 없어 예상금액만 표기합니다.")
             if qty is not None and not item.unit:
-                result.notes.append(f"{label}: 단위가 비어 있어 '수량 {number_text(qty)}'로 표기합니다. 위 표에서 개·권·세트 등을 입력할 수 있습니다.")
+                result.notes.append(f"{label}: 단위가 비어 있어 숫자 '{number_text(qty)}'만 표기합니다. 위 표에서 개·권·세트 등을 입력할 수 있습니다.")
             result.items.append(item)
         except InputError as exc:
             result.errors.append(str(exc))
@@ -261,7 +261,7 @@ def detail_line(item: Item, *, show_spec=True, fee_mode="none", allow_mismatch=F
     if item.quantity is not None and item.price is not None and not item.matches and not allow_mismatch:
         raise InputError("단가 × 수량과 예상금액의 차이를 확인해 주세요.")
     if item.matches:
-        qty = f"{number_text(item.quantity)}{item.unit}" if item.unit else f"수량 {number_text(item.quantity)}"
+        qty = f"{number_text(item.quantity)}{item.unit}"
         body = f"{number_text(item.price)}원 X {qty} = {number_text(item.amount)}원"
     else:
         body = f"{number_text(item.amount)}원(예상금액 기준)"

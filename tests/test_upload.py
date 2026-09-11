@@ -15,7 +15,8 @@ def test_actual_upload_through_app():
     data = Path(os.environ["KEDUFINE_TEST_XLSX"]).read_bytes()
     upload = BytesIO(data)
     items = validate_rows(read_workbook(data)[0].rows).items
-    with patch("streamlit.file_uploader", return_value=upload):
+    # Clipboard JavaScript requires a browser, outside AppTest's mocked v2 runtime.
+    with patch("streamlit.file_uploader", return_value=upload), patch("clipboard_ui._copy"):
         app = AppTest.from_file(str(APP), default_timeout=20).run()
         app.text_input(key="purpose").set_value("교과 수업 준비").run()
         assert not app.exception

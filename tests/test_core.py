@@ -81,7 +81,7 @@ def test_real_layout_blank_unit_no_guessing():
     assert not checked.errors
     assert checked.items[0].quantity == 1
     _, body, total = generate_document(checked.items, DocumentOptions("수업 준비", "교육용 서비스", "신청"))
-    assert "300,000원 X 수량 1 = 300,000원" in body
+    assert "300,000원 X 1 = 300,000원" in body
     assert total == 300000
     assert "300,000원(금삼십만원)" in body
     assert "2개월" in body

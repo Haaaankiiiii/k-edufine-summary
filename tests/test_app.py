@@ -1,10 +1,12 @@
 from pathlib import Path
+from unittest.mock import patch
 from streamlit.testing.v1 import AppTest
 
 APP = Path(__file__).resolve().parents[1] / "app.py"
 
 
-def test_empty_then_demo_then_purpose_then_reset():
+@patch("clipboard_ui._copy")  # AppTest 1.55 mocks the v2 registry; copy is checked in a real browser.
+def test_empty_then_demo_then_purpose_then_reset(_copy):
     app = AppTest.from_file(str(APP), default_timeout=20).run()
     assert not app.exception
     assert not app.code

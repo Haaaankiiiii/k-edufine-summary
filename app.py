@@ -4,6 +4,7 @@ from datetime import date
 from hashlib import sha256
 
 import streamlit as st
+from clipboard_ui import copy_button
 
 from core import (
     FIELDS, DocumentOptions, InputError, SheetData, budget_text, clean, decimal_value,
@@ -168,10 +169,9 @@ with right:
                 title, body, _ = generate_document(validation.items, options)
                 st.caption("제목")
                 st.code(title, language=None)
-                st.caption("개요 · 오른쪽 위 복사 버튼을 눌러 K-에듀파인에 붙여 넣으세요.")
+                st.caption("개요 · 아래 복사 버튼을 눌러 K-에듀파인에 붙여 넣으세요.")
                 st.code(body, language=None, wrap_lines=True)
-                st.download_button("개요 텍스트 내려받기", data=body.encode("utf-8-sig"),
-                                   file_name="품의_개요.txt", mime="text/plain", width="stretch")
+                copy_button(body, key="copy_summary")
                 with st.expander("문구 직접 다듬기"):
                     st.caption("아래 수정 내용은 품목 계산에 반영되지 않습니다. 위 입력값을 바꾸면 새 초안으로 초기화됩니다.")
                     signature = sha256(body.encode()).hexdigest()
@@ -180,8 +180,7 @@ with right:
                         st.session_state["draft_signature"] = signature
                     manual = st.text_area("최종 문구", height=340, key="manual_draft")
                     st.code(manual, language=None, wrap_lines=True)
-                    st.download_button("수정한 개요 내려받기", data=manual.encode("utf-8-sig"),
-                                       file_name="품의_개요_수정본.txt", mime="text/plain")
+                    copy_button(manual, key="copy_manual", label="수정한 개요 복사하기")
             except InputError as exc:
                 st.info(str(exc))
 
